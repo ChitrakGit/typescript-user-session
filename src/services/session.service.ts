@@ -6,7 +6,7 @@ const {signJwt,verifyJwt} = require(<string>'../utils/jwt.utils');
 
 const {findUser} = require(<string>'../services/user.services');
 
-
+// create session
 export const createSession = async(userId:string, useragent:string) => {
     try {
         let item:any = {user:userId, useragent:useragent};
@@ -16,7 +16,7 @@ export const createSession = async(userId:string, useragent:string) => {
         throw new Error(error);  
     }
 }
-
+// find session
 export const findSession = async(query:FilterQuery<typeof SessionDocument>) => {
     try {
         let item = await Session.find(query);
@@ -25,7 +25,16 @@ export const findSession = async(query:FilterQuery<typeof SessionDocument>) => {
         throw new Error(error);  
     }
 }
-
+// update session
+export const updateSession = async(query:FilterQuery<typeof SessionDocument>,update:UpdateQuery<typeof SessionDocument>) => {
+    try {
+        let item = await Session.updateOne(query,update);
+        return item  ;
+    } catch (error:any) {
+        throw new Error(error);  
+    }
+}
+// delete session
 export const deleteSession = async(query:FilterQuery<typeof SessionDocument>) => {
     try {
         let item = await Session.deleteOne(query);
@@ -35,17 +44,8 @@ export const deleteSession = async(query:FilterQuery<typeof SessionDocument>) =>
     }
 }
 
-export const updateSession = async(query:FilterQuery<typeof SessionDocument>,update:UpdateQuery<typeof SessionDocument>) => {
-    try {
-        let item = await Session.updateOne(query,update);
-        return item  ;
-    } catch (error:any) {
-        throw new Error(error);  
-    }
-}
 
-
-
+// refresh token
 export async function reIssueAccessToken({refreshToken}: {refreshToken: string}) {
     
     const { decoded } = verifyJwt(refreshToken);
